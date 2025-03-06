@@ -1,13 +1,13 @@
 import { Component, ChangeDetectorRef, AfterViewInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from "@angular/forms";
 import { CommonModule } from "@angular/common";
-import { Router, RouterModule } from "@angular/router"; // ✅ Import RouterModule
+import { Router, RouterModule } from "@angular/router";
 import { AuthService } from "../auth.service";
 
 @Component({
   selector: "app-login",
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule], // ✅ Ensure RouterModule is imported
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: "./login.component.html",
   styleUrls: ["./login.component.scss"],
 })
@@ -19,7 +19,7 @@ export class LoginComponent implements AfterViewInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cdRef: ChangeDetectorRef // ✅ ChangeDetectorRef to detect changes
+    private cdRef: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       email: ["", [Validators.required, Validators.email]],
@@ -28,20 +28,25 @@ export class LoginComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.cdRef.detectChanges(); // ✅ Force Angular to detect changes after rendering
+    this.cdRef.detectChanges();
   }
 
   onSubmit() {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe(
         (response) => {
-          console.log("Login successful", response);
+          console.log("✅ Connexion réussie", response);
+
+          // 🔥 Store token and role in localStorage
           localStorage.setItem("token", response.access_token);
+          localStorage.setItem("role", response.role);
+
+          // 🚀 Redirect to a single dashboard route
           this.router.navigate(["/dashboard"]);
         },
         (error) => {
-          this.errorMessage = "Email ou mot de passe incorrect";
-          console.error("Login failed", error);
+          this.errorMessage = "❌ Email ou mot de passe incorrect";
+          console.error("⚠️ Échec de connexion", error);
         }
       );
     }

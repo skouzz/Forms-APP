@@ -1,0 +1,14 @@
+<p-sidebar [(visible)]="visible" position="left" [baseZIndex]="1000" [showCloseIcon]="false">
+  <div class="sidebar-header">
+    <h3>Menu</h3>
+    <button pButton icon="pi pi-times" (click)="visible = false" class="close-btn"></button>
+  </div>
+
+  <p-menu [model]="menuItems"></p-menu>
+
+  <div class="logout-btn">
+    <button pButton label="Déconnexion" icon="pi pi-sign-out" (click)="logout()" class="p-button-danger"></button>
+  </div>
+</p-sidebar>
+
+<button pButton icon="pi pi-bars" (click)="visible = true" class="menu-btn"></button>

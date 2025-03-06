@@ -14,6 +14,7 @@ import { AuthService } from '../auth.service';
 export class SignupComponent {
   signupForm: FormGroup;
   errorMessage: string = '';
+  submitted = false; // Pour afficher les erreurs après soumission
 
   private fb = inject(FormBuilder);
   private router = inject(Router);
@@ -23,49 +24,73 @@ export class SignupComponent {
     this.signupForm = this.fb.group({
       username: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      role: ['user'], // Default role
-      adminCode: [{ value: '', disabled: true }, Validators.required] // Initially disabled
+      password: ['', [Validators.required, Validators.minLength(8)]],
+      role: ['user'], // Rôle par défaut
+      adminCode: [{ value: '', disabled: true }] // Désactivé par défaut
     });
 
-    // Subscribe to role changes to enable/disable adminCode dynamically
+    // Gérer l'activation/désactivation du champ adminCode
     this.signupForm.get('role')?.valueChanges.subscribe((role) => {
+      const adminCodeControl = this.signupForm.get('adminCode');
+
       if (role === 'admin') {
-        this.signupForm.get('adminCode')?.enable(); // Enable field when admin is selected
+        adminCodeControl?.setValidators([Validators.required]);
+        adminCodeControl?.enable();
       } else {
-        this.signupForm.get('adminCode')?.disable(); // Disable & clear when role is user
-        this.signupForm.get('adminCode')?.reset();
+        adminCodeControl?.clearValidators();
+        adminCodeControl?.setValue('');
+        adminCodeControl?.disable();
       }
+
+      adminCodeControl?.updateValueAndValidity();
     });
   }
 
   onSubmit() {
-    if (this.signupForm.valid) {
-      const formData = this.signupForm.getRawValue(); // Retrieve all values, including adminCode
+    this.submitted = true; // Marque le formulaire comme soumis
 
-      // Admin code validation (optional)
+    if (this.signupForm.valid) {
+      const formData = this.signupForm.getRawValue();
+
+      // Vérification du code admin (optionnel)
       if (formData.role === 'admin' && formData.adminCode !== 'secret123') {
-        this.errorMessage = 'Invalid admin code!';
+        this.errorMessage = 'Code administrateur invalide!';
         return;
       }
 
-      // Remove adminCode if user is not an admin
       if (formData.role !== 'admin') {
-        delete formData.adminCode;
+        delete formData.adminCode; // Supprime le champ s'il n'est pas nécessaire
       }
 
-      console.log('Sending data to backend:', formData);
+      console.log('Envoi des données au backend:', formData);
 
       this.authService.signup(formData).subscribe({
-        next: (response) => {
-          console.log('Signup successful:', response);
-          this.router.navigate(['/login']);
+        next: () => {
+          console.log('Inscription réussie!');
+          this.clearCacheAndStorage(); // Clear cache and localStorage after successful signup
+          this.router.navigate(['/login']); // Redirection après succès
         },
         error: (error) => {
-          console.error('Signup error:', error);
-          this.errorMessage = error.error?.message || 'Signup failed.';
+          console.error('Erreur d’inscription:', error);
+          this.errorMessage = error.error?.message || 'Échec de l’inscription.';
         }
       });
     }
+  }
+
+  // Clear browser cache and localStorage
+  clearCacheAndStorage() {
+    // Clearing the browser cache
+    if (typeof window !== 'undefined') {
+      window.localStorage.clear(); // Clear localStorage
+      window.sessionStorage.clear(); // Clear sessionStorage
+      // Optionally, clear other caches if needed
+      // window.caches.keys().then((cacheNames) => {
+      //   cacheNames.forEach((cacheName) => {
+      //     window.caches.delete(cacheName);
+      //   });
+      // });
+    }
+    console.log('Cache and storage cleared');
   }
 }

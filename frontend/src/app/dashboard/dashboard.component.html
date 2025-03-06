@@ -1,1 +1,31 @@
-<p>dashboard works!</p>
+<div class="dashboard-container">
+  <!-- Sidebar -->
+  <app-sidebar></app-sidebar>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Admin Content -->
+    <div *ngIf="userRole === 'admin'">
+      <h1>Admin Dashboard</h1>
+      <p>Welcome, Admin! You have access to all features.</p>
+      <button (click)="manageUsers()">Manage Users</button>
+      <button (click)="viewReports()">View Reports</button>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- User Content -->
+    <div *ngIf="userRole === 'user'">
+      <h1>User Dashboard</h1>
+      <p>Welcome, User! Here are your tasks.</p>
+      <button (click)="viewTasks()">View Tasks</button>
+      <button (click)="submitReport()">Submit Report</button>
+      <button (click)="logout()">Logout</button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="!userRole">
+      <p>Loading...</p>
+    </div>
+
+  </div>
+</div>
