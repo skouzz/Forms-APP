@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../auth/auth.service'; // Import AuthService
-import { SidebarComponent } from '../sidebar/sidebar.component'; // Import SidebarComponent
+import { SidebarComponent } from '../sidebar/sidebar.component';
+import { NavbarComponent } from "../navbar/navbar.component"; // Import SidebarComponent
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent], // Add SidebarComponent to imports
+  imports: [CommonModule, RouterModule, SidebarComponent, NavbarComponent], // Add SidebarComponent to imports
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
 })

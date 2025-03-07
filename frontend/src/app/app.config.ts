@@ -10,9 +10,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatButtonModule } from '@angular/material/button';
 
-// Import PrimeNG modules
-import { MenuModule } from 'primeng/menu';
-
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
@@ -21,13 +18,10 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     provideHttpClient(),
-    importProvidersFrom(FormsModule),  // Support for ngModel
+    importProvidersFrom(FormsModule), // Support for ngModel
     importProvidersFrom(MatIconModule), // Provide MatIconModule
     importProvidersFrom(MatSidenavModule), // Provide MatSidenavModule
     importProvidersFrom(MatListModule), // Provide MatListModule
-    importProvidersFrom(MatButtonModule), // Provide MatButtonModule
-    importProvidersFrom(MenuModule), // Add MenuModule here
-    provideAnimationsAsync(),
-    provideAnimationsAsync(), // Provide animations async
+    importProvidersFrom(MatButtonModule), provideAnimationsAsync(), provideAnimationsAsync(), // Provide MatButtonModule
   ],
 };

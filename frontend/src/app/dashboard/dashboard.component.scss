@@ -1,0 +1,12 @@
+:host {
+  display: block;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+router-outlet {
+  display: block;
+  margin-top: 64px; // Offset for navbar height
+  margin-left: 60px; // Offset for collapsed sidebar width
+}

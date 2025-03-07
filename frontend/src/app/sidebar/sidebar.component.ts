@@ -1,43 +1,39 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../auth/auth.service';
-import { Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { SidebarModule } from 'primeng/sidebar';
+import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
+import { MenuItem } from 'primeng/api';
+import { SidebarService } from '../sidebar/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
+  standalone: true,
+  imports: [RouterModule, CommonModule, SidebarModule, ButtonModule, MenuModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss']
+  styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent implements OnInit {
-  visible: boolean = true; // Par défaut, le sidebar est ouvert
-  role: string = '';
-  menuItems: any[] = [];
+  visible = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
+  menuItems: MenuItem[] = [
+    { label: 'Dashboard', icon: 'pi pi-chart-bar', routerLink: '/dashboard' },
+    { label: 'Settings', icon: 'pi pi-cog', routerLink: '/settings' },
+    { label: 'Profile', icon: 'pi pi-user', routerLink: '/profile' },
+    { label: 'Support', icon: 'pi pi-question', routerLink: '/support' },
+  ];
 
-  ngOnInit() {
-    this.authService.currentUser.subscribe(user => {
-      this.role = user?.role || '';
-      this.setMenuItems();
+  constructor(private sidebarService: SidebarService) {}
+
+  ngOnInit(): void {
+    this.sidebarService.sidebarVisible$.subscribe((visible) => {
+      this.visible = visible;
     });
   }
 
-  setMenuItems() {
-    const adminMenu = [
-      { label: 'Dashboard', icon: 'pi pi-home', routerLink: '/admin/dashboard' },
-      { label: 'Gérer Utilisateurs', icon: 'pi pi-users', routerLink: '/admin/users' },
-      { label: 'Paramètres', icon: 'pi pi-cog', routerLink: '/admin/settings' }
-    ];
-
-    const userMenu = [
-      { label: 'Dashboard', icon: 'pi pi-home', routerLink: '/user/dashboard' },
-      { label: 'Mes Formulaires', icon: 'pi pi-file', routerLink: '/user/forms' },
-      { label: 'Paramètres', icon: 'pi pi-cog', routerLink: '/user/settings' }
-    ];
-
-    this.menuItems = this.role === 'admin' ? adminMenu : userMenu;
-  }
-
-  logout() {
-    this.authService.logout();
+  signOut(): void {
+    // Add sign-out logic here (e.g., clear auth, redirect)
+    console.log('Sign out clicked');
   }
 }

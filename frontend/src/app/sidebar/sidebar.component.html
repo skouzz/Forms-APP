@@ -1,14 +1,29 @@
-<p-sidebar [(visible)]="visible" position="left" [baseZIndex]="1000" [showCloseIcon]="false">
-  <div class="sidebar-header">
-    <h3>Menu</h3>
-    <button pButton icon="pi pi-times" (click)="visible = false" class="close-btn"></button>
-  </div>
+<div class="sidebar-container">
+  <p-sidebar [(visible)]="visible"
+             [position]="'left'"
+             [styleClass]="'sidebar'"
+             [showCloseIcon]="false"
+             [modal]="false"
+             [dismissible]="false">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="40" height="40" rx="10" fill="var(--p-primary-color)"/>
+          <path d="M20 12L28 20L20 28L12 20L20 12Z" fill="white"/>
+        </svg>
+        <span class="sidebar-logo-text" *ngIf="visible">CorpApp</span>
+      </div>
+    </div>
 
-  <p-menu [model]="menuItems"></p-menu>
+    <div class="sidebar-menu">
+      <p-menu [model]="menuItems" styleClass="sidebar-menu-list"></p-menu>
+    </div>
 
-  <div class="logout-btn">
-    <button pButton label="Déconnexion" icon="pi pi-sign-out" (click)="logout()" class="p-button-danger"></button>
-  </div>
-</p-sidebar>
-
-<button pButton icon="pi pi-bars" (click)="visible = true" class="menu-btn"></button>
+    <div class="sidebar-footer">
+      <p-button icon="pi pi-sign-out"
+                styleClass="p-button-text sidebar-action-button"
+                (click)="signOut()"
+                [label]="visible ? 'Sign Out' : ''" />
+    </div>
+  </p-sidebar>
+</div>
