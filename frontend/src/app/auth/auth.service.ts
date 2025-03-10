@@ -10,10 +10,13 @@ import { map } from 'rxjs/operators';
 export class AuthService {
   private apiUrl = 'http://localhost:3000/auth';
   private currentUserSubject: BehaviorSubject<any>;
+  private roleSubject: BehaviorSubject<string | null>; // New role subject
 
   constructor(private http: HttpClient, private router: Router) {
     // Initialize currentUserSubject with data from localStorage
     this.currentUserSubject = new BehaviorSubject<any>(this.getUserData());
+    // Initialize roleSubject with the role from localStorage or null
+    this.roleSubject = new BehaviorSubject<string | null>(this.getRole());
   }
 
   // Get current user as Observable
@@ -21,7 +24,12 @@ export class AuthService {
     return this.currentUserSubject.asObservable();
   }
 
-  // Get user role
+  // Get role as Observable
+  get role(): Observable<string | null> {
+    return this.roleSubject.asObservable();
+  }
+
+  // Get user role (synchronous method)
   getRole(): string | null {
     return localStorage.getItem('role');
   }
@@ -29,7 +37,7 @@ export class AuthService {
   // Get user data from localStorage
   private getUserData(): any {
     const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null; // Handle null or undefined
+    return user ? JSON.parse(user) : null;
   }
 
   // Check if the user is authenticated
@@ -59,26 +67,20 @@ export class AuthService {
 
   // Logout
   logout(): void {
-    // Clear user data from localStorage
     localStorage.removeItem('token');
     localStorage.removeItem('role');
     localStorage.removeItem('user');
-
-    // Update currentUserSubject
     this.currentUserSubject.next(null);
-
-    // Redirect to login page
+    this.roleSubject.next(null); // Update roleSubject on logout
     this.router.navigate(['/login']);
   }
 
   // Save user data after login/signup
   private saveUser(user: any): void {
-    // Save token, role, and user data to localStorage
     localStorage.setItem('token', user.token);
     localStorage.setItem('role', user.role);
     localStorage.setItem('user', JSON.stringify(user));
-
-    // Update currentUserSubject
     this.currentUserSubject.next(user);
+    this.roleSubject.next(user.role); // Update roleSubject with the new role
   }
 }

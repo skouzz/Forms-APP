@@ -1,13 +1,16 @@
 <header class="navbar">
+  <!-- Overlay for blur effect -->
+  <div class="overlay" *ngIf="isOverlayActive" (click)="isProfileMenuOpen = false; toggleSidebarIfExpanded()" aria-hidden="true"></div>
+
   <div class="navbar-container">
-    <!-- Logo and Toggle Button -->
+    <!-- Logo Section with Toggle Button -->
     <div class="navbar-logo-section">
-      <p-button icon="pi pi-bars"
-                styleClass="p-button-text p-button-rounded navbar-toggle-button"
-                (click)="toggleSidebar()" />
+      <button class="navbar-toggle-button" (click)="toggleSidebar()" aria-label="Toggle sidebar">
+        <i class="pi pi-bars"></i>
+      </button>
       <a routerLink="/" class="navbar-logo">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="10" fill="var(--p-primary-color)"/>
+          <rect width="40" height="40" rx="10" fill="#3b82f6"/>
           <path d="M20 12L28 20L20 28L12 20L20 12Z" fill="white"/>
         </svg>
         <span class="navbar-logo-text">CorpApp</span>
@@ -15,20 +18,41 @@
     </div>
 
     <!-- Navigation -->
-    <p-menubar [model]="menuItems" class="navbar-menu"></p-menubar>
+    <nav class="navbar-menu">
+      <a *ngFor="let item of filteredMenuItems" [routerLink]="item.routerLink" class="navbar-menu-item">
+        <i [class]="item.icon"></i>
+        <span>{{ item.label }}</span>
+      </a>
+    </nav>
 
-    <!-- Actions -->
+    <!-- Actions (Right Side) -->
     <div class="navbar-actions">
-      <p-button icon="pi pi-moon"
-                styleClass="p-button-text p-button-rounded navbar-action-button"
-                (click)="toggleDarkMode()"
-                [label]="isDarkMode ? 'Light' : 'Dark'" />
-      <p-button label="Sign In"
-                styleClass="p-button-outlined p-button-rounded navbar-action-button"
-                routerLink="/signin" />
-      <p-button label="Sign Up"
-                styleClass="p-button-raised p-button-primary p-button-rounded navbar-action-button"
-                routerLink="/signup" />
+      <!-- Notification Icon -->
+      <button class="navbar-action-button" (click)="onNotificationClick()" aria-label="Notifications">
+        <i class="pi pi-bell"></i>
+      </button>
+
+      <!-- Announcement Icon -->
+      <button class="navbar-action-button" (click)="onAnnouncementClick()" aria-label="Announcements">
+        <i class="pi pi-megaphone"></i>
+      </button>
+
+      <!-- Theme Toggle -->
+      <button class="navbar-action-button" (click)="toggleTheme()" aria-label="Toggle theme">
+        <i class="pi" [class]="(themeService.isDarkMode$ | async) ? 'pi-sun' : 'pi-moon'"></i>
+      </button>
+
+      <!-- Profile Icon with Dropdown -->
+      <div class="navbar-profile">
+        <button class="navbar-action-button" (click)="toggleProfileMenu()" aria-label="Profile menu">
+          <i class="pi pi-user"></i>
+        </button>
+        <div class="profile-menu" *ngIf="isProfileMenuOpen">
+          <a routerLink="/profile" class="profile-menu-item" (click)="isProfileMenuOpen = false">Profile</a>
+          <a routerLink="/settings" class="profile-menu-item" (click)="isProfileMenuOpen = false">Settings</a>
+          <a (click)="logout()" class="profile-menu-item">Logout</a>
+        </div>
+      </div>
     </div>
   </div>
 </header>

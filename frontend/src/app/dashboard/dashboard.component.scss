@@ -1,12 +1,14 @@
 :host {
   display: block;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  position: relative;
 }
 
-router-outlet {
-  display: block;
-  margin-top: 64px; // Offset for navbar height
-  margin-left: 60px; // Offset for collapsed sidebar width
+.dashboard-content {
+  position: absolute;
+  top: 60px; /* Below navbar */
+  height: calc(100% - 60px);
+  background-color: #f7fafc;
+  transition: all 0.3s ease-in-out;
 }

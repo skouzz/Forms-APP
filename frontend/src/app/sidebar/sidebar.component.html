@@ -1,29 +1,39 @@
-<div class="sidebar-container">
-  <p-sidebar [(visible)]="visible"
-             [position]="'left'"
-             [styleClass]="'sidebar'"
-             [showCloseIcon]="false"
-             [modal]="false"
-             [dismissible]="false">
+<div class="sidebar" [@sidebarAnimation]="visible ? 'expanded' : 'collapsed'" (click)="onSidebarClick($event)">
+  <div class="sidebar-content">
+    <!-- Header -->
     <div class="sidebar-header">
       <div class="sidebar-logo">
         <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="40" height="40" rx="10" fill="var(--p-primary-color)"/>
+          <rect width="40" height="40" rx="10" fill="#3b82f6"/>
           <path d="M20 12L28 20L20 28L12 20L20 12Z" fill="white"/>
         </svg>
         <span class="sidebar-logo-text" *ngIf="visible">CorpApp</span>
       </div>
     </div>
 
+    <!-- Menu -->
     <div class="sidebar-menu">
-      <p-menu [model]="menuItems" styleClass="sidebar-menu-list"></p-menu>
+      <ng-container *ngFor="let item of filteredMenuItems; let last = last">
+        <div class="sidebar-menu-item" (click)="toggleSubMenu(item, $event)">
+          <i [class]="item.icon"></i>
+          <span class="sidebar-menu-text" *ngIf="visible">{{ item.label }}</span>
+          <i class="pi pi-angle-down toggle-icon" *ngIf="visible && item.subItems" [class.expanded]="item.expanded"></i>
+        </div>
+        <div class="sub-menu" *ngIf="visible && item.subItems" [@subMenuAnimation]="item.expanded ? 'open' : 'closed'">
+          <a *ngFor="let subItem of item.subItems" [routerLink]="subItem.routerLink" class="sub-menu-item" (click)="onMenuItemClick($event)">
+            <span>{{ subItem.label }}</span>
+          </a>
+        </div>
+        <div class="separator" *ngIf="!last && visible"></div>
+      </ng-container>
     </div>
 
+    <!-- Footer with Logout -->
     <div class="sidebar-footer">
-      <p-button icon="pi pi-sign-out"
-                styleClass="p-button-text sidebar-action-button"
-                (click)="signOut()"
-                [label]="visible ? 'Sign Out' : ''" />
+      <button class="sidebar-action-button logout-button" (click)="confirmLogout()" aria-label="Logout">
+        <i class="pi pi-sign-out"></i>
+        <span class="sidebar-action-text" *ngIf="visible">Logout</span>
+      </button>
     </div>
-  </p-sidebar>
+  </div>
 </div>

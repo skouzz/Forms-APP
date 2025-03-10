@@ -1,53 +1,40 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../auth/auth.service'; // Import AuthService
+import { NavbarComponent } from '../navbar/navbar.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { NavbarComponent } from "../navbar/navbar.component"; // Import SidebarComponent
+import { SidebarService } from '../sidebar/sidebar.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule, SidebarComponent, NavbarComponent], // Add SidebarComponent to imports
+  imports: [CommonModule, NavbarComponent, SidebarComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
+  animations: [
+    trigger('contentAnimation', [
+      state('collapsed', style({
+        left: '60px',
+        width: 'calc(100% - 60px)',
+      })),
+      state('expanded', style({
+        left: '18rem',
+        width: 'calc(100% - 18rem)',
+      })),
+      transition('collapsed <=> expanded', [
+        animate('300ms ease-in-out')
+      ]),
+    ]),
+  ],
 })
 export class DashboardComponent implements OnInit {
-  userRole: string | null = null;
+  sidebarVisible = false;
 
-  constructor(private router: Router, private authService: AuthService) {} // Inject AuthService
+  constructor(private sidebarService: SidebarService) {}
 
   ngOnInit(): void {
-    // Get the role from localStorage
-    this.userRole = localStorage.getItem('role');
-
-    // If no role is found, redirect to login
-    if (!this.userRole) {
-      this.router.navigate(['/login']);
-    }
-  }
-
-  // Admin-specific actions
-  manageUsers(): void {
-    this.router.navigate(['/dashboard/manage-users']);
-  }
-
-  viewReports(): void {
-    this.router.navigate(['/dashboard/reports']);
-  }
-
-  // User-specific actions
-  viewTasks(): void {
-    this.router.navigate(['/dashboard/tasks']);
-  }
-
-  submitReport(): void {
-    this.router.navigate(['/dashboard/submit-report']);
-  }
-
-  // Logout
-  logout(): void {
-    this.authService.logout(); // Call the logout method from AuthService
-    this.router.navigate(['/login']); // Redirect to login page after logout
+    this.sidebarService.sidebarVisible$.subscribe((visible) => {
+      this.sidebarVisible = visible;
+    });
   }
 }

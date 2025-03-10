@@ -15,4 +15,9 @@ export class SidebarService {
   setSidebarVisible(visible: boolean): void {
     this.sidebarVisibleSubject.next(visible);
   }
+
+  // Add getter for isExpanded
+  get isExpanded(): boolean {
+    return this.sidebarVisibleSubject.value;
+  }
 }

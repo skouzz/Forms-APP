@@ -1,3 +1,5 @@
 <app-navbar></app-navbar>
 <app-sidebar></app-sidebar>
-<router-outlet></router-outlet>
+<div class="dashboard-content" [@contentAnimation]="sidebarVisible ? 'expanded' : 'collapsed'">
+  <p>Dashboard Content Here</p>
+</div>
