@@ -1,6 +1,6 @@
 <header class="navbar">
-  <!-- Overlay for blur effect -->
-  <div class="overlay" *ngIf="isOverlayActive" (click)="isProfileMenuOpen = false; toggleSidebarIfExpanded()" aria-hidden="true"></div>
+  <!-- Overlay only for profile menu -->
+  <div class="overlay" *ngIf="isOverlayActive" (click)="toggleSidebarIfExpanded()" aria-hidden="true"></div>
 
   <div class="navbar-container">
     <!-- Logo Section with Toggle Button -->
@@ -27,22 +27,15 @@
 
     <!-- Actions (Right Side) -->
     <div class="navbar-actions">
-      <!-- Notification Icon -->
       <button class="navbar-action-button" (click)="onNotificationClick()" aria-label="Notifications">
         <i class="pi pi-bell"></i>
       </button>
-
-      <!-- Announcement Icon -->
       <button class="navbar-action-button" (click)="onAnnouncementClick()" aria-label="Announcements">
         <i class="pi pi-megaphone"></i>
       </button>
-
-      <!-- Theme Toggle -->
       <button class="navbar-action-button" (click)="toggleTheme()" aria-label="Toggle theme">
         <i class="pi" [class]="(themeService.isDarkMode$ | async) ? 'pi-sun' : 'pi-moon'"></i>
       </button>
-
-      <!-- Profile Icon with Dropdown -->
       <div class="navbar-profile">
         <button class="navbar-action-button" (click)="toggleProfileMenu()" aria-label="Profile menu">
           <i class="pi pi-user"></i>

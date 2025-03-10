@@ -20,7 +20,7 @@
           <i class="pi pi-angle-down toggle-icon" *ngIf="visible && item.subItems" [class.expanded]="item.expanded"></i>
         </div>
         <div class="sub-menu" *ngIf="visible && item.subItems" [@subMenuAnimation]="item.expanded ? 'open' : 'closed'">
-          <a *ngFor="let subItem of item.subItems" [routerLink]="subItem.routerLink" class="sub-menu-item" (click)="onMenuItemClick($event)">
+          <a *ngFor="let subItem of item.subItems" [routerLink]="subItem.routerLink" class="sub-menu-item" (click)="onSubMenuClick($event)">
             <span>{{ subItem.label }}</span>
           </a>
         </div>

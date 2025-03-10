@@ -115,32 +115,26 @@ export class SidebarComponent implements OnInit {
 
   toggleSubMenu(item: MenuItem, event: Event): void {
     event.stopPropagation();
-    console.log('Toggle clicked:', item.label, 'Visible before:', this.visible, 'Expanded before:', item.expanded);
-    // Open sidebar if not already visible, then toggle sub-menu
-    if (!this.visible) {
-      this.sidebarService.setSidebarVisible(true);
-      this.visible = true; // Sync local state immediately
-    }
-    item.expanded = !item.expanded;
-    console.log('Visible after:', this.visible, 'Expanded after:', item.expanded);
+    console.log('Menu clicked:', item.label);
+    item.expanded = !item.expanded; // Only toggle sub-menu
   }
 
-  onMenuItemClick(event: Event): void {
+  onSubMenuClick(event: Event): void {
     event.stopPropagation();
-    console.log('Sub-menu item clicked');
-    this.sidebarService.setSidebarVisible(true); // Keep sidebar open
+    console.log('Sub-menu clicked');
+    // No visibility change
   }
 
   onSidebarClick(event: Event): void {
     event.stopPropagation();
-    console.log('Sidebar clicked, keeping open');
-    this.sidebarService.setSidebarVisible(true);
+    console.log('Sidebar clicked');
+    // No visibility change
   }
 
   confirmLogout(): void {
     if (confirm('Are you sure you want to logout?')) {
       this.authService.logout();
-      this.sidebarService.setSidebarVisible(false); // Close on logout
+      // No sidebar close here—only toggle button controls it
     }
   }
 }

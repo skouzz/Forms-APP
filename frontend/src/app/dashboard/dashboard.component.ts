@@ -34,6 +34,7 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.sidebarService.sidebarVisible$.subscribe((visible) => {
+      console.log('Dashboard sidebarVisible changed to:', visible);
       this.sidebarVisible = visible;
     });
   }

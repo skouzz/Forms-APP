@@ -62,7 +62,8 @@ export class NavbarComponent implements OnInit {
   }
 
   toggleSidebar(): void {
-    this.sidebarService.toggleSidebar();
+    console.log('Navbar toggle button clicked');
+    this.sidebarService.toggleSidebar(); // Only way to open/close sidebar
   }
 
   toggleTheme(): void {
@@ -77,6 +78,7 @@ export class NavbarComponent implements OnInit {
     if (confirm('Are you sure you want to logout?')) {
       this.isProfileMenuOpen = false;
       this.authService.logout();
+      // No sidebar close here—only toggle button controls it
     }
   }
 
@@ -89,12 +91,11 @@ export class NavbarComponent implements OnInit {
   }
 
   get isOverlayActive(): boolean {
-    return this.isProfileMenuOpen || this.sidebarService.isExpanded;
+    return this.isProfileMenuOpen; // Overlay only for profile menu, not sidebar
   }
 
   toggleSidebarIfExpanded(): void {
-    if (this.sidebarService.isExpanded) {
-      this.sidebarService.toggleSidebar();
-    }
+    // Removed sidebar close logic—only profile menu closes
+    this.isProfileMenuOpen = false;
   }
 }
